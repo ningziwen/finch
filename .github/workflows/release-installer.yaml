@@ -52,10 +52,10 @@ jobs:
 #          sudo installer -pkg Finch-${GITHUB_REF_NAME}-aarch64.pkg -target /
 #      - name: Sleep for 30 seconds
 #        run: sleep 30
-      - name: Run init
-        run: finch vm init
-#      - name: Run e2e tests
-#        run: INSTALLED=true make test-e2e
+#      - name: Run init
+#        run: finch vm init
+      - name: Run e2e tests
+        run: INSTALLED=true make test-e2e
 #      - name: Silently uninstall
 #        run: echo 'y' | sudo bash /Applications/Finch/uninstall.sh
 #      - name: Delete installer
