@@ -14,7 +14,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [[self-hosted, macos, arm64, 11.7], [self-hosted, macos, arm64, 12.6], [self-hosted, macos, arm64, 13.0]]
+        os: [[self-hosted, macos, arm64, 13.0]] #[self-hosted, macos, arm64, 11.7], [self-hosted, macos, arm64, 12.6],
     runs-on: ${{ matrix.os }}
     timeout-minutes: 60
     env:
@@ -56,96 +56,96 @@ jobs:
         run: echo 'y' | sudo bash /Applications/Finch/uninstall.sh
       - name: Delete installer
         run: rm -rf Finch-${GITHUB_REF_NAME}-aarch64.pkg
-
-  macos-arm64-upload-installer:
-    needs: macos-arm64-test-installer
-    runs-on: ubuntu-latest
-    timeout-minutes: 60
-    steps:
-      - uses: actions/checkout@v2
-        with:
-          fetch-depth: 1
-          submodules: recursive
-          persist-credentials: false
-      - name: configure aws credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          role-to-assume: ${{ secrets.ROLE }}
-          role-session-name: download-installer-session
-          aws-region: ${{ secrets.REGION }}
-      - name: Download from S3
-        run: |
-          aws s3 cp s3://${{ secrets.INSTALLER_PRIVATE_BUCKET_NAME }}/Finch-${GITHUB_REF_NAME}-aarch64.pkg Finch-${GITHUB_REF_NAME}-aarch64.pkg
-      - name: Upload to release
-        run: gh release upload ${GITHUB_REF_NAME} Finch-${GITHUB_REF_NAME}-aarch64.pkg
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-  macos-x86-test-installer:
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [[self-hosted, macos, amd64, 11.7], [self-hosted, macos, amd64, 12.6], [self-hosted, macos, amd64, 13.0]]
-    runs-on: ${{ matrix.os }}
-    timeout-minutes: 60
-    env:
-      ACCESS_TOKEN: ${{ secrets.FINCH_BOT_TOKEN }}
-    steps:
-      - uses: actions/setup-go@v2
-        with:
-          go-version: 1.19.x
-      - uses: actions/checkout@v2
-        with:
-          fetch-depth: 1
-          submodules: recursive
-          persist-credentials: false
-      - name: Configure repo access
-        run: |
-          git config --global url.https://$ACCESS_TOKEN@github.com/.insteadOf https://github.com/
-          GOPRIVATE=github.com/runfinch go get -v github.com/runfinch/common-tests@v0.1.0
-      - name: Clean up previous files
-        run: |
-          sudo rm -rf /opt/finch
-          sudo rm -rf ~/.finch
-      - name: configure aws credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          role-to-assume: ${{ secrets.ROLE }}
-          role-session-name: download-installer-session
-          aws-region: ${{ secrets.REGION }}
-      - name: Download from S3
-        run: |
-          aws s3 cp s3://${{ secrets.INSTALLER_PRIVATE_BUCKET_NAME }}/Finch-${GITHUB_REF_NAME}-x86_64.pkg Finch-${GITHUB_REF_NAME}-x86_64.pkg
-      - name: Silently install
-        run: |
-          sudo installer -pkg Finch-${GITHUB_REF_NAME}-x86_64.pkg -target /
-      - name: Run e2e tests
-        run: INSTALLED=true make test-e2e
-      - name: Silently uninstall
-        run: echo 'y' | sudo bash /Applications/Finch/uninstall.sh
-      - name: Delete installer
-        run: rm -rf Finch-${GITHUB_REF_NAME}-x86_64.pkg
-
-  macos-x86-upload-installer:
-    needs: macos-x86-test-installer
-    runs-on: ubuntu-latest
-    timeout-minutes: 60
-    steps:
-      - uses: actions/checkout@v2
-        with:
-          fetch-depth: 1
-          submodules: recursive
-          persist-credentials: false
-      - name: configure aws credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          role-to-assume: ${{ secrets.ROLE }}
-          role-session-name: download-installer-session
-          aws-region: ${{ secrets.REGION }}
-      - name: Download from S3
-        run: |
-          aws s3 cp s3://${{ secrets.INSTALLER_PRIVATE_BUCKET_NAME }}/Finch-${GITHUB_REF_NAME}-x86_64.pkg Finch-${GITHUB_REF_NAME}-x86_64.pkg
-      - name: Upload to release
-        run: gh release upload ${GITHUB_REF_NAME} Finch-${GITHUB_REF_NAME}-x86_64.pkg
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#
+#  macos-arm64-upload-installer:
+#    needs: macos-arm64-test-installer
+#    runs-on: ubuntu-latest
+#    timeout-minutes: 60
+#    steps:
+#      - uses: actions/checkout@v2
+#        with:
+#          fetch-depth: 1
+#          submodules: recursive
+#          persist-credentials: false
+#      - name: configure aws credentials
+#        uses: aws-actions/configure-aws-credentials@v1
+#        with:
+#          role-to-assume: ${{ secrets.ROLE }}
+#          role-session-name: download-installer-session
+#          aws-region: ${{ secrets.REGION }}
+#      - name: Download from S3
+#        run: |
+#          aws s3 cp s3://${{ secrets.INSTALLER_PRIVATE_BUCKET_NAME }}/Finch-${GITHUB_REF_NAME}-aarch64.pkg Finch-${GITHUB_REF_NAME}-aarch64.pkg
+#      - name: Upload to release
+#        run: gh release upload ${GITHUB_REF_NAME} Finch-${GITHUB_REF_NAME}-aarch64.pkg
+#        env:
+#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#
+#  macos-x86-test-installer:
+#    strategy:
+#      fail-fast: false
+#      matrix:
+#        os: [[self-hosted, macos, amd64, 11.7], [self-hosted, macos, amd64, 12.6], [self-hosted, macos, amd64, 13.0]]
+#    runs-on: ${{ matrix.os }}
+#    timeout-minutes: 60
+#    env:
+#      ACCESS_TOKEN: ${{ secrets.FINCH_BOT_TOKEN }}
+#    steps:
+#      - uses: actions/setup-go@v2
+#        with:
+#          go-version: 1.19.x
+#      - uses: actions/checkout@v2
+#        with:
+#          fetch-depth: 1
+#          submodules: recursive
+#          persist-credentials: false
+#      - name: Configure repo access
+#        run: |
+#          git config --global url.https://$ACCESS_TOKEN@github.com/.insteadOf https://github.com/
+#          GOPRIVATE=github.com/runfinch go get -v github.com/runfinch/common-tests@v0.1.0
+#      - name: Clean up previous files
+#        run: |
+#          sudo rm -rf /opt/finch
+#          sudo rm -rf ~/.finch
+#      - name: configure aws credentials
+#        uses: aws-actions/configure-aws-credentials@v1
+#        with:
+#          role-to-assume: ${{ secrets.ROLE }}
+#          role-session-name: download-installer-session
+#          aws-region: ${{ secrets.REGION }}
+#      - name: Download from S3
+#        run: |
+#          aws s3 cp s3://${{ secrets.INSTALLER_PRIVATE_BUCKET_NAME }}/Finch-${GITHUB_REF_NAME}-x86_64.pkg Finch-${GITHUB_REF_NAME}-x86_64.pkg
+#      - name: Silently install
+#        run: |
+#          sudo installer -pkg Finch-${GITHUB_REF_NAME}-x86_64.pkg -target /
+#      - name: Run e2e tests
+#        run: INSTALLED=true make test-e2e
+#      - name: Silently uninstall
+#        run: echo 'y' | sudo bash /Applications/Finch/uninstall.sh
+#      - name: Delete installer
+#        run: rm -rf Finch-${GITHUB_REF_NAME}-x86_64.pkg
+#
+#  macos-x86-upload-installer:
+#    needs: macos-x86-test-installer
+#    runs-on: ubuntu-latest
+#    timeout-minutes: 60
+#    steps:
+#      - uses: actions/checkout@v2
+#        with:
+#          fetch-depth: 1
+#          submodules: recursive
+#          persist-credentials: false
+#      - name: configure aws credentials
+#        uses: aws-actions/configure-aws-credentials@v1
+#        with:
+#          role-to-assume: ${{ secrets.ROLE }}
+#          role-session-name: download-installer-session
+#          aws-region: ${{ secrets.REGION }}
+#      - name: Download from S3
+#        run: |
+#          aws s3 cp s3://${{ secrets.INSTALLER_PRIVATE_BUCKET_NAME }}/Finch-${GITHUB_REF_NAME}-x86_64.pkg Finch-${GITHUB_REF_NAME}-x86_64.pkg
+#      - name: Upload to release
+#        run: gh release upload ${GITHUB_REF_NAME} Finch-${GITHUB_REF_NAME}-x86_64.pkg
+#        env:
+#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
