@@ -244,7 +244,7 @@ test-unit:
 # test-e2e assumes the VM instance doesn't exist, please make sure to remove it before running.
 .PHONY: test-e2e
 test-e2e:
-	go test -ldflags $(LDFLAGS) -timeout 60m ./e2e/... -test.v -ginkgo.v -test.memprofile -args --installed="$(INSTALLED)"
+	go test -ldflags $(LDFLAGS) -timeout 60m ./e2e/... -test.v -ginkgo.v -args --installed="$(INSTALLED)"
 
 .PHONY: gen-code
 # Since different projects may have different versions of tool binaries,
