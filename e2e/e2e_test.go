@@ -5,6 +5,7 @@ package e2e
 
 import (
 	"flag"
+	"fmt"
 	"os"
 	"path/filepath"
 	"testing"
@@ -33,6 +34,8 @@ func TestE2e(t *testing.T) {
 	if *installed {
 		subject = installedTestSubject
 	}
+
+	ginkgo.GinkgoWriter.Println(fmt.Sprintf("Testing subject %q...", subject))
 
 	o, err := option.New([]string{subject})
 	if err != nil {
