@@ -13,6 +13,7 @@ import (
 	"github.com/onsi/gomega"
 	"github.com/runfinch/common-tests/command"
 	"github.com/runfinch/common-tests/option"
+	"github.com/runfinch/common-tests/tests"
 )
 
 const virtualMachineRootCmd = "vm"
@@ -38,11 +39,10 @@ func TestE2e(t *testing.T) {
 		t.Fatalf("failed to initialize a testing option: %v", err)
 	}
 
-	ginkgo.SynchronizedBeforeSuite(func() []byte {
+	ginkgo.SynchronizedBeforeSuite(func() {
 		command.New(o, "vm", "init").WithTimeoutInSeconds(600).Run()
-		//tests.SetupLocalRegistry(o)
-		return nil
-	}, func(bytes []byte) {})
+		tests.SetupLocalRegistry(o)
+	}, func() {})
 
 	ginkgo.SynchronizedAfterSuite(func() {
 		command.New(o, "vm", "stop").WithTimeoutInSeconds(60).Run()
