@@ -28,34 +28,34 @@ jobs:
           fetch-depth: 1
           submodules: recursive
           persist-credentials: false
-#      - name: Configure repo access
-#        run: |
-#          git config --global url.https://$ACCESS_TOKEN@github.com/.insteadOf https://github.com/
-#          GOPRIVATE=github.com/runfinch go get -v github.com/runfinch/common-tests@v0.1.0
-#      - name: Clean up previous files
-#        run: |
-#          sudo rm -rf /opt/finch
-#          sudo rm -rf ~/.finch
-#      - name: configure aws credentials
-#        uses: aws-actions/configure-aws-credentials@v1
-#        with:
-#          role-to-assume: ${{ secrets.ROLE }}
-#          role-session-name: download-installer-session
-#          aws-region: ${{ secrets.REGION }}
-#      - name: Download from S3
-#        run: |
-#          aws s3 cp s3://${{ secrets.INSTALLER_PRIVATE_BUCKET_NAME }}/Finch-${GITHUB_REF_NAME}-aarch64.pkg Finch-${GITHUB_REF_NAME}-aarch64.pkg
-#      - name: Silently install
-#        # Rosetta is only needed in arm64
-#        run: |
-#          echo 'A' | sudo softwareupdate --install-rosetta
-#          sudo installer -pkg Finch-${GITHUB_REF_NAME}-aarch64.pkg -target /
+      - name: Configure repo access
+        run: |
+          git config --global url.https://$ACCESS_TOKEN@github.com/.insteadOf https://github.com/
+          GOPRIVATE=github.com/runfinch go get -v github.com/runfinch/common-tests@v0.1.0
+      - name: Clean up previous files
+        run: |
+          sudo rm -rf /opt/finch
+          sudo rm -rf ~/.finch
+      - name: configure aws credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          role-to-assume: ${{ secrets.ROLE }}
+          role-session-name: download-installer-session
+          aws-region: ${{ secrets.REGION }}
+      - name: Download from S3
+        run: |
+          aws s3 cp s3://${{ secrets.INSTALLER_PRIVATE_BUCKET_NAME }}/Finch-${GITHUB_REF_NAME}-aarch64.pkg Finch-${GITHUB_REF_NAME}-aarch64.pkg
+      - name: Silently install
+        # Rosetta is only needed in arm64
+        run: |
+          echo 'A' | sudo softwareupdate --install-rosetta
+          sudo installer -pkg Finch-${GITHUB_REF_NAME}-aarch64.pkg -target /
       - name: Run e2e tests
         run: INSTALLED=true make test-e2e
-      - name: Silently uninstall
-        run: echo 'y' | sudo bash /Applications/Finch/uninstall.sh
-      - name: Delete installer
-        run: rm -rf Finch-${GITHUB_REF_NAME}-aarch64.pkg
+#      - name: Silently uninstall
+#        run: echo 'y' | sudo bash /Applications/Finch/uninstall.sh
+#      - name: Delete installer
+#        run: rm -rf Finch-${GITHUB_REF_NAME}-aarch64.pkg
 #
 #  macos-arm64-upload-installer:
 #    needs: macos-arm64-test-installer
