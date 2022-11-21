@@ -50,7 +50,6 @@ jobs:
         run: |
           echo 'A' | sudo softwareupdate --install-rosetta
           sudo installer -pkg Finch-${GITHUB_REF_NAME}-aarch64.pkg -target /
-      - run: sleep 20
       - name: Run e2e tests
         run: INSTALLED=true make test-e2e
       - name: Silently uninstall
