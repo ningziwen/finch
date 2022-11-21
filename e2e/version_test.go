@@ -13,7 +13,8 @@ var testVersion = func(o *option.Option) {
 	ginkgo.Context("Version", func() {
 		ginkgo.Specify("Test version", func() {
 			//exec.Command("finch", "version").Run()
-			command.Run(o, "version")
+			command.New(o, "version")
+			//command.Run(o, "version")
 			//gomega.Expect(command.StdoutStr(o, "version")).To(gomega.Equal(fmt.Sprintf("Finch version: %s", "v0.1.0")))
 		})
 	})
