@@ -17,7 +17,7 @@ var testVersion = func(o *option.Option) {
 	ginkgo.Context("Version", func() {
 		ginkgo.Specify("Test version", func() {
 			//exec.Command("finch", "version").Run()
-			cmd := exec.Command("finch version") //nolint:gosec // G204 is not an issue because cmdName is fully controlled by the user.
+			cmd := exec.Command("finch", "version") //nolint:gosec // G204 is not an issue because cmdName is fully controlled by the user.
 			session, err := gexec.Start(cmd, ginkgo.GinkgoWriter, ginkgo.GinkgoWriter)
 			gomega.Expect(err).ShouldNot(gomega.HaveOccurred())
 			session.Wait(10 * time.Second)
