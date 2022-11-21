@@ -34,6 +34,8 @@ func TestE2e(t *testing.T) {
 		subject = installedTestSubject
 	}
 
+	ginkgo.GinkgoWriter.Println("subject: " + subject)
+
 	o, err := option.New([]string{subject})
 	if err != nil {
 		t.Fatalf("failed to initialize a testing option: %v", err)
