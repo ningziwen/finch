@@ -30,6 +30,8 @@ LDFLAGS := "-X $(PACKAGE)/pkg/version.Version=$(VERSION) -X $(PACKAGE)/pkg/versi
 
 INSTALLED ?= false
 
+SUBJECT ?= "finch"
+
 ifneq (,$(findstring arm64,$(ARCH)))
 	SUPPORTED_ARCH = true
 	LIMA_ARCH = aarch64
@@ -277,15 +279,15 @@ test-e2e-vm:
 
 .PHONY: test-benchmark
 test-benchmark:
-	cd benchmark/all && go test -ldflags $(LDFLAGS) -bench=. -benchmem --installed="$(INSTALLED)"
+	cd benchmark/all && go test -ldflags $(LDFLAGS) -bench=. -benchmem --installed="$(INSTALLED)" --subject="$(SUBJECT)"
 
 .PHONY: test-benchmark-vm
 test-benchmark-vm:
-	cd benchmark/vm && go test -ldflags $(LDFLAGS) -bench=. -benchmem --installed="$(INSTALLED)"
+	cd benchmark/vm && go test -ldflags $(LDFLAGS) -bench=. -benchmem --installed="$(INSTALLED)" --subject="$(SUBJECT)"
 
 .PHONY: test-benchmark-container
 test-benchmark-container:
-	cd benchmark/container && go test -ldflags $(LDFLAGS) -bench=. -benchmem --installed="$(INSTALLED)"
+	cd benchmark/container && go test -ldflags $(LDFLAGS) -bench=. -benchmem --installed="$(INSTALLED)" --subject="$(SUBJECT)"
 
 .PHONY: gen-code
 # Since different projects may have different versions of tool binaries,

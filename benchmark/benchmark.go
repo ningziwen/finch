@@ -24,6 +24,9 @@ const InstalledTestSubject = "finch"
 // Installed indicates whether the tests are run against installed application.
 var Installed = flag.Bool("installed", false, "the flag to show whether the tests are run against installed application")
 
+// Subject indicates the test subject.
+var Subject = flag.String("subject", "finch", "the string to show the test subject")
+
 // Metrics includes all the additional metrics that Finch benchmark reports,
 // except testing.B natively supported metrics like execution time and memory.
 type Metrics struct {
@@ -52,7 +55,7 @@ func GetSubject() (string, error) {
 
 	subject := filepath.Join(wd, "../../_output/bin/finch")
 	if *Installed {
-		subject = InstalledTestSubject
+		subject = *Subject
 	}
 	return subject, nil
 }
